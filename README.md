@@ -15,12 +15,17 @@ Part of the `even` UT port — see `../plan_ubuntu_touch_port.md`.
 ## Build (on VPS: 100GB / 8GB RAM)
 
 ```bash
-# env: bc bison build-essential cpio curl flex git kmod libssl-dev libtinfo5 unzip wget xz-utils img2simg jq
+# env: bc bison build-essential cpio curl flex git kmod libssl-dev libtinfo5 unzip wget xz-utils img2simg jq python2 python3 fakeroot
+# NOTE: push the kernel `ut` branch to GitHub first — build.sh shallow-clones it
 git clone <this repo> && cd device_realme_even-ut
-./build.sh -b workdir                                  # clones kernel@ut, applies halium.config, builds boot.img + dtbo
-./build/prepare-fake-ota.sh out/device_even_usrmerge.tar.xz ota   # downloads UT rootfs
-./build/system-image-from-ota.sh ota/ubuntu_command images        # → images/{boot,system,rootfs,dtbo}
+./build.sh -b workdir        # clones build tools (halium-11) + kernel@ut, applies
+                             # RMX3191_defconfig + halium.config, builds boot.img + dtbo.img
+./build/prepare-fake-ota.sh out/device_even_usrmerge.tar.xz ota   # downloads UT 24.04 rootfs + Halium GSI
+./build/system-image-from-ota.sh ota/ubuntu_command images        # → images/{boot.img,system.img,rootfs.img,dtbo.img}
 ```
+
+`build/` is auto-cloned from `ubports/community-ports/halium-generic-adaptation-build-tools`
+(branch `halium-11`) on first run — don't edit it locally.
 
 ## Prerequisites (phone)
 - Unlocked bootloader, TWRP (`twrp_realme_even`) installed
@@ -63,8 +68,8 @@ adb reboot
 Flash the LOS 20 zip from TWRP as usual (restores boot/dtbo/vbmeta/super).
 
 ## TODO (Phase 1/3)
-- [ ] `halium.config` fragment in kernel repo (AppArmor/USER_NS/etc.) — referenced by deviceinfo but not yet added
-- [ ] Verify exact `deviceinfo_dtbo` list vs `make dtbs` output
-- [ ] Verify `systempart=/dev/mapper/system` cmdline against merlin/lancelot android11 ports
-- [ ] AVB: system fstab has `avb=vbmeta_system` — may need vendor fstab patch or fully disabled vbmeta
+- [ ] `halium.config` fragment in kernel repo (AppArmor/USER_NS/etc.) — referenced by deviceinfo but not yet added; build fails without it
+- [ ] Push kernel `ut` branch to GitHub (build.sh clones from origin)
+- [ ] Verify `systempart=/dev/mapper/system` + dynparts initrd against merlin/lancelot android11 ports on first boot
+- [ ] AVB: vendor fstab has `avb=vbmeta_system` — may need vendor fstab patch or fully disabled vbmeta
 - [ ] UBports installer + system-image channel config (Phase 5)

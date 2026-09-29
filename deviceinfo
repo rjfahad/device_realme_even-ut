@@ -1,35 +1,39 @@
 # Ubuntu Touch deviceinfo — realme C25/C25S (even, MT6768)
-# Consumed by UBports standalone-kernel build scripts (./build.sh).
-# See: https://ubports-docs-dev.readthedocs.io/en/latest/porting/build_and_boot/standalone_kernel_build.html
+# Consumed by halium-generic-adaptation-build-tools (see build.sh).
+# Reference: community-ports/android11/xiaomi-redmi-note-10s/xiaomi-rosemary (same MTK offset scheme)
 
 deviceinfo_name="realme C25"
 deviceinfo_manufacturer="realme"
 deviceinfo_codename="even"
 deviceinfo_arch="aarch64"
 
-# --- kernel (branch `ut` of kernel_realme_even) ---
+# --- kernel (branch `ut` of kernel_realme_even; must be pushed to GitHub before building) ---
 deviceinfo_kernel_source="https://github.com/rjfahad/kernel_realme_even"
 deviceinfo_kernel_source_branch="ut"
-deviceinfo_kernel_defconfig="RMX3191_defconfig halium.config"  # TODO Phase 1: add halium.config to kernel
+deviceinfo_kernel_defconfig="RMX3191_defconfig halium.config"  # TODO Phase 1: halium.config not yet in kernel
 deviceinfo_kernel_clang_compile="true"
-deviceinfo_kernel_image_name="Image.gz-dtb"
-# console=tty0 is mandatory (halium-boot init); bootopt is stock MTK arg
+deviceinfo_kernel_image_name="Image.gz"   # LOS style: Image.gz + separate dtb (matches BOARD_KERNEL_IMAGE_NAME)
+deviceinfo_dtb="mediatek/mt6768.dtb"      # BOARD_INCLUDE_DTB_IN_BOOTIMG, passed via --dtb (header v2)
+# console=tty0 mandatory for halium-boot init; bootopt = stock MTK arg;
+# systempart: rootfs on logical system in super (dynparts initrd)
 deviceinfo_kernel_cmdline="console=tty0 bootopt=64S3,32N2,64N2 systempart=/dev/mapper/system"
 
-# --- Halium / boot image ---
-deviceinfo_halium_version="11"
-deviceinfo_bootimg_header_version="2"   # from BoardConfig BOARD_BOOT_HEADER_VERSION
-deviceinfo_use_overlaystore="true"
-
-# --- dtbo (built from kernel dts, matches run.sh oppo6768_*.dtbo glob) ---
-# TODO: verify exact dtbo list against `make dtbs` output / stock dtbo.img
+# --- dtbo (from defconfig CONFIG_BUILD_ARM64_DTB_OVERLAY_IMAGE_NAMES, same as run.sh glob) ---
 deviceinfo_dtbo="mediatek/oppo6768_20761.dtbo mediatek/oppo6768_2167A.dtbo mediatek/oppo6768_216AF.dtbo"
 
-# --- flash offsets (absolute load addresses = BOARD_KERNEL_BASE 0x40078000 + BoardConfig offsets) ---
+# --- Halium / rootfs ---
+deviceinfo_halium_version="11"
+deviceinfo_ubuntu_touch_release="24.04-1.x"
+deviceinfo_use_overlaystore="true"
+
+# --- boot image (header v2; offsets RELATIVE to base, same values as BoardConfig.mk) ---
+deviceinfo_bootimg_header_version="2"
 deviceinfo_flash_pagesize="2048"
-deviceinfo_flash_offset_base="0x00000000"
-deviceinfo_flash_offset_kernel="0x40080000"    # 0x40078000 + 0x00008000
-deviceinfo_flash_offset_ramdisk="0x47c80000"   # 0x40078000 + 0x07c08000
-deviceinfo_flash_offset_second="0x40f00000"    # 0x40078000 + 0x00e88000
-deviceinfo_flash_offset_tags="0x4bc80000"      # 0x40078000 + 0x0bc08000
-deviceinfo_flash_offset_dtb="0x4bc80000"       # same as tags
+deviceinfo_flash_offset_base="0x40078000"
+deviceinfo_flash_offset_kernel="0x00008000"
+deviceinfo_flash_offset_ramdisk="0x07c08000"
+deviceinfo_flash_offset_second="0x00e88000"
+deviceinfo_flash_offset_tags="0x0bc08000"
+deviceinfo_flash_offset_dtb="0x0bc08000"
+deviceinfo_bootimg_os_version="11"
+deviceinfo_bootimg_os_patch_level="2021-06-01"  # TODO: verify from stock boot.img

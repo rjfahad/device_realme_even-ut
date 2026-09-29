@@ -1,0 +1,8 @@
+build/
+out/
+ota/
+images/
+workdir/
+*.img
+*.tar.xz
+*.tar.gz
