@@ -72,5 +72,6 @@ Flash the LOS 20 zip from TWRP as usual (restores boot/dtbo/vbmeta/super).
 - [ ] Push kernel `ut` branch to GitHub (build.sh clones from origin)
 - [ ] Verify `systempart=/dev/mapper/system` + dynparts initrd against merlin/lancelot android11 ports on first boot
 - [ ] AVB: vendor fstab has `avb=vbmeta_system` — may need vendor fstab patch or fully disabled vbmeta
+- [ ] Review `overlay/` (seeded from xiaomi-rosemary): trim Xiaomi/begonia-specific udev entries in `70-begonia.rules`, adapt urfkill/wmtWifi if `even` differs
 - [ ] If apps crash after boot: cherry-pick 4.14 AppArmor patches (docs link: kdrag0n/proton_zf6 halium/security/apparmor)
 - [ ] UBports installer + system-image channel config (Phase 5)
