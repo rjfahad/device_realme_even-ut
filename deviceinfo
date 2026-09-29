@@ -1,0 +1,35 @@
+# Ubuntu Touch deviceinfo — realme C25/C25S (even, MT6768)
+# Consumed by UBports standalone-kernel build scripts (./build.sh).
+# See: https://ubports-docs-dev.readthedocs.io/en/latest/porting/build_and_boot/standalone_kernel_build.html
+
+deviceinfo_name="realme C25"
+deviceinfo_manufacturer="realme"
+deviceinfo_codename="even"
+deviceinfo_arch="aarch64"
+
+# --- kernel (branch `ut` of kernel_realme_even) ---
+deviceinfo_kernel_source="https://github.com/rjfahad/kernel_realme_even"
+deviceinfo_kernel_source_branch="ut"
+deviceinfo_kernel_defconfig="RMX3191_defconfig halium.config"  # TODO Phase 1: add halium.config to kernel
+deviceinfo_kernel_clang_compile="true"
+deviceinfo_kernel_image_name="Image.gz-dtb"
+# console=tty0 is mandatory (halium-boot init); bootopt is stock MTK arg
+deviceinfo_kernel_cmdline="console=tty0 bootopt=64S3,32N2,64N2 systempart=/dev/mapper/system"
+
+# --- Halium / boot image ---
+deviceinfo_halium_version="11"
+deviceinfo_bootimg_header_version="2"   # from BoardConfig BOARD_BOOT_HEADER_VERSION
+deviceinfo_use_overlaystore="true"
+
+# --- dtbo (built from kernel dts, matches run.sh oppo6768_*.dtbo glob) ---
+# TODO: verify exact dtbo list against `make dtbs` output / stock dtbo.img
+deviceinfo_dtbo="mediatek/oppo6768_20761.dtbo mediatek/oppo6768_2167A.dtbo mediatek/oppo6768_216AF.dtbo"
+
+# --- flash offsets (absolute load addresses = BOARD_KERNEL_BASE 0x40078000 + BoardConfig offsets) ---
+deviceinfo_flash_pagesize="2048"
+deviceinfo_flash_offset_base="0x00000000"
+deviceinfo_flash_offset_kernel="0x40080000"    # 0x40078000 + 0x00008000
+deviceinfo_flash_offset_ramdisk="0x47c80000"   # 0x40078000 + 0x07c08000
+deviceinfo_flash_offset_second="0x40f00000"    # 0x40078000 + 0x00e88000
+deviceinfo_flash_offset_tags="0x4bc80000"      # 0x40078000 + 0x0bc08000
+deviceinfo_flash_offset_dtb="0x4bc80000"       # same as tags
