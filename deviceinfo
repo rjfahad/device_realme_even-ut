@@ -16,7 +16,7 @@ deviceinfo_kernel_image_name="Image.gz"   # LOS style: Image.gz + separate dtb (
 deviceinfo_dtb="mediatek/mt6768.dtb"      # BOARD_INCLUDE_DTB_IN_BOOTIMG, passed via --dtb (header v2)
 # console=tty0 mandatory for halium-boot init; bootopt = stock MTK arg;
 # systempart: rootfs on logical system in super (dynparts initrd)
-deviceinfo_kernel_cmdline="console=tty0 bootopt=64S3,32N2,64N2 systempart=/dev/mapper/system"
+deviceinfo_kernel_cmdline="console=tty0 console=ttyS0,921600n1 bootopt=64S3,32N2,64N2 systempart=/dev/mapper/system"
 
 # --- dtbo (from defconfig CONFIG_BUILD_ARM64_DTB_OVERLAY_IMAGE_NAMES, same as run.sh glob) ---
 deviceinfo_dtbo="mediatek/oppo6768_20761.dtbo mediatek/oppo6768_2167A.dtbo mediatek/oppo6768_216AF.dtbo"
