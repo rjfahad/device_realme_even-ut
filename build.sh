@@ -3,6 +3,9 @@ set -xe
 
 cd "$(dirname "$0")"
 
+# make sure user-local tools (python2, mkbootimg) are found even in non-interactive shells
+export PATH="$HOME/bin:$PATH"
+
 [ -d build ] || git clone https://gitlab.com/ubports/community-ports/halium-generic-adaptation-build-tools -b halium-11 build
 
 # AOSP gcc ships binutils 2.27 `as` which rejects -mcpu=cortex-a55 (added by the
